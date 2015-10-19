@@ -21,7 +21,8 @@ def reward(request, key):
 	for condition in conditions:
 		#print condition.valid_from
 		#print condition.valid_til
-		if current_time < condition.valid_from or current_time > condition.valid_til:
+		if (not condition.valid_from is None and current_time < condition.valid_from) or \
+			(not condition.valid_til is None and current_time > condition.valid_til):
 			return render_to_response('reward/condition_not_met.html', {'condition': condition})
 	riddles = reward.riddle_set.order_by("pk")
 	if riddles.count > 0:

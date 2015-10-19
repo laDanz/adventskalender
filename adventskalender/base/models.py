@@ -9,8 +9,8 @@ class Reward(models.Model):
 	#foreign keys
 
 class Condition(models.Model):
-	valid_from = models.DateTimeField()
-	valid_til = models.DateTimeField()
+	valid_from = models.DateTimeField(null=True, blank=True)
+	valid_til = models.DateTimeField(null=True, blank=True)
 	#foreign keys
 	reward = models.ForeignKey(Reward)
 

@@ -29,6 +29,9 @@ def reward(request, key):
 		solved_all = True
 		error_message = ""
 		for riddle in riddles:
+			riddle.tries = 0
+			if str(riddle.pk)+"_tries" in request.POST.keys():
+				riddle.tries = int(request.POST[str(riddle.pk)+"_tries"])
 			answer_key = str(riddle.pk)+'_user_answer'
 			if answer_key not in request.POST.keys():
 				solved_all = False
@@ -37,6 +40,7 @@ def reward(request, key):
 			if riddle.answer != user_answer:
 				solved_all = False
 				error_message = "Fehler, versuchs nochmal!"
+				riddle.tries+=1
 		if not solved_all:
 			return render_to_response('reward/detail.html', {'reward': reward, 'riddles':riddles, 'error_message':error_message}, context_instance=RequestContext(request))
 	return render_to_response('reward/earned.html', {'reward': reward})

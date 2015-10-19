@@ -7,6 +7,7 @@ Bevor du deine Belohnung kriegst musst du noch diese Rätsel lösen:
 	{% csrf_token %}
 	{% for riddle in riddles %}
 		<p>
+		<input type="hidden" name="{{ riddle.pk }}_tries" value="{{ riddle.tries }}" />
 		<b>Frage:</b> {{ riddle.question }}<br>
 		<input placeholder="Antwort" name="{{ riddle.pk }}_user_answer" />
 		</p>

@@ -1,0 +1,5 @@
+Herzlich wollkommen auf deinem Adventskalender!
+<br><br>
+Um weiterzumachen, musst du aber einen Code haben!<br>
+<input placeholder="Code" id="code" onkeydown='if (event.keyCode == 13){document.getElementById("button").click()};' /><br>
+<input type="submit" value="Eingeben!" onclick='window.location.href = "/"+document.getElementById("code").value;' id="button" />

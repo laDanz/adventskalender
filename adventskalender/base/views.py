@@ -7,7 +7,7 @@ from django.utils import timezone
 from base.models import Reward, Condition, Riddle
 
 def home(request):
-	return HttpResponse("Hello, world. Hier gibt's noch nichts zu sehen!")
+	return render_to_response('home.html')
 
 def reward(request, key):
 	try:

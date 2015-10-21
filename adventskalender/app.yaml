@@ -1,0 +1,18 @@
+application: adventskalender-1103
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static/
+  static_dir: static/
+  expiration: '0'
+- url: .*
+  script: adventskalender.wsgi.application
+
+libraries:
+- name: django
+  version: 1.5
+- name: MySQLdb
+  version: "latest"

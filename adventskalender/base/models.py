@@ -1,5 +1,7 @@
 from django.db import models
 
+from google.appengine.api import images as gimages
+
 # Create your models here.
 
 class Reward(models.Model):
@@ -9,6 +11,14 @@ class Reward(models.Model):
 	#foreign keys
 	def __str__(self):
 		return self.key
+
+class Image(models.Model):
+	image = models.ImageField(upload_to='uploads')
+	blob_key = models.CharField(max_length=300)
+	reward = models.ForeignKey(Reward)
+	def serving_url(self):
+		print "blobkey: " + self.blob_key
+		return gimages.get_serving_url(self.blob_key)
 
 class Condition(models.Model):
 	valid_from = models.DateTimeField(null=True, blank=True)

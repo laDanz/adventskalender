@@ -1,0 +1,18 @@
+{% if not reward.id %}
+<b>Neues</b> Objekt erstellen:
+{% else %}
+Vorhandenes Objekt bearbeiten:
+{% endif %}
+
+{{ form.errors }}
+{{ form.non_field_errors }}
+
+<form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.as_table }}
+	<div> Und Bilder: </div>
+	{% for image_form in image_forms %}
+		{{ image_form.as_table }}
+	{% endfor %}
+	<input type="submit" value="Go!" />
+</form>

@@ -1,3 +1,7 @@
 Hier deine Belohnung:
 <br><br>
 {{ reward.text }}
+<br>
+{% for image in reward.image_set.all %}
+  <img src="{{ image.serving_url }}" height="420">
+{% endfor %}

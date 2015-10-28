@@ -1,5 +1,5 @@
 application: adventskalender-1103
-version: 1
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -26,3 +26,5 @@ libraries:
   version: 1.5
 - name: MySQLdb
   version: "latest"
+- name: PIL
+  version: latest

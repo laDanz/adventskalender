@@ -18,6 +18,7 @@ urlpatterns += patterns('',
     url(r'^success/', 'base.views.upoadsuccess', name='upoadsuccess'),
     #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     url(r'^images/(?P<blob_key>.+)', 'base.views.images', name='images'),
+    url(r'^files/(?P<blob_key>.+)', 'base.views.files', name='files'),
     
     url(r'^(?P<key>[^_].+)/$', 'base.views.reward', name='reward'),
     # url(r'^adventskalender/', include('adventskalender.foo.urls')),

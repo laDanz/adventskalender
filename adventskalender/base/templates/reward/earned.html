@@ -16,7 +16,14 @@
 				<div class="panel-body">
 					{{ reward.text }}
 					<br/><br/>
-					<img src="{{ image.serving_url }}" />
+					{% for i in reward.image_set.all %}
+						{% if i.content_type|slice:":6" == 'image/' %}
+							<img src="{{ i.serving_url }}" />
+						{% else %}
+							<a href="{{ i.download_url }}">{{ i.filename }}</a>
+						{% endif %}
+						<br/>
+					{% endfor %}
 				</div>
 			</div>
 		</div>

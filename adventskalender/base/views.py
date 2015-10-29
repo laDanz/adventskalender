@@ -33,7 +33,7 @@ def reward(request, key):
 		#print condition.valid_til
 		if (not condition.valid_from is None and current_time < condition.valid_from) or \
 			(not condition.valid_til is None and current_time > condition.valid_til):
-			return render_to_response('reward/condition_not_met.html', {'condition': condition})
+			return render_to_response('reward/condition_not_met.html', {'condition': condition, 'current_time':current_time})
 	riddles = reward.riddle_set.order_by("pk")
 	if riddles.count > 0:
 		solved_all = True
@@ -49,7 +49,7 @@ def reward(request, key):
 			user_answer = request.POST[answer_key]
 			if riddle.answer != user_answer:
 				solved_all = False
-				error_message = "Fehler, versuchs nochmal!"
+				error_message = "Versuch es nochmal!"
 				riddle.tries+=1
 		if not solved_all:
 			return render_to_response('reward/detail.html', {'reward': reward, 'riddles':riddles, 'error_message':error_message}, context_instance=RequestContext(request))
@@ -59,54 +59,112 @@ def images(request, blob_key):
 	serving_url = gimages.get_serving_url(blob_key)
 	return render_to_response('debug/images.html', {'serving_url': serving_url, })
 
+
+def read_in_chunks(file_object, chunk_size=1024):
+	while True:
+		data = file_object.read(chunk_size)
+		if not data:
+			break
+		yield data
+
+def files(request, blob_key):
+	binfo = blobstore.BlobInfo.get(blob_key)
+	response = HttpResponse(content_type=binfo.content_type)
+	response['Content-Disposition'] = 'attachment; filename=' + binfo.filename
+	
+	breader = binfo.open()
+		for piece in read_in_chunks(breader):
+		response.write(piece)
+	breader.close()
+	
+	return response
+
+
 def get_blobinfo_from_post(request):
+	result = []
 	request.META['wsgi.input'].seek(0)
 	fields = cgi.FieldStorage(request.META['wsgi.input'], environ=request.META)
-	value = fields["image"]
-	blob_info=blobstore.parse_blob_info(value)
-	if blob_info.size == 0:
-		blob_info.delete()
-		return None
-	return blob_info
+	values = []
+	imagefields = fields["image"]
+	if isinstance(imagefields, list):
+		for i in imagefields:
+			values.append( i )
+	else:
+		values.append( imagefields )
+	for value in values:
+		blob_info=blobstore.parse_blob_info(value)
+		if blob_info.size == 0:
+			blob_info.delete()
+		else:
+			result.append(blob_info)
+	return result
 
 def upoadsuccess(request):
 	blob_info = get_blobinfo_from_post(request)
 	return render_to_response('debug/upoadsuccess.html', {'request': request, 'file':request.FILES['image'], 'binfo':blob_info, 'sbinfo':dir(blob_info) })
 
 def manage_reward(request, key):
-	image = Image()
+	form = None
+	riddle_form = None
+	condition_form = None
+	
 	try:
+		#loading existing reward
 		reward = Reward.objects.get(key=key)
-		image = reward.image_set.all()
 	except Reward.DoesNotExist:
+		#creating new reward, initialize variables
 		reward = Reward()
 		reward.key = key
-		
+	
+	riddle = reward.riddle_set.all()
+	if riddle.count() == 0:
+		riddle = Riddle()
+		riddle.reward = reward
+	else:
+		riddle = riddle[0]
+	
+	condition = reward.condition_set.all()
+	if condition.count() == 0:
+		condition = Condition()
+		condition.reward = reward
+	else:
+		condition = condition[0]
+
 	if request.method == 'POST':
 		form = RewardManageForm(instance=reward, data=request.POST)
 		if form.is_valid():
 			form.save()
-			blob_info = get_blobinfo_from_post(request)
-			if blob_info is not None:
-				print "blobkey: " + str(blob_info.key())
+			blob_infos = get_blobinfo_from_post(request)
+			for blob_info in blob_infos:
+				#print "blobkey: " + str(blob_info.key())
 				image = Image()
 				image.blob_key = str(blob_info.key())
 				image.reward = Reward.objects.get(key=key)
 				image.save()
-	else:
-		form = RewardManageForm(instance=reward)
+		riddle_form = RiddleManageForm(instance=riddle, data=request.POST) 
+		if riddle_form.is_valid():
+			riddle_form.save()
+		condition_form = ConditionManageForm(instance=condition, data=request.POST) 
+		if condition_form.is_valid():
+			condition_form.save()
 		
-	if isinstance(image, QuerySet):
-		image_forms = []
-		if image.count()==0:
-			image_forms = [ImageManageForm(instance=Image()), ]
-		else:
-			for i in image:
-				image_forms.append(ImageManageForm(instance=i))
-	else:
-		image_forms = [ImageManageForm(instance=image), ]
+	images = list(reward.image_set.all())
+	images.append(Image())
 	
+	if form is None:
+		form = RewardManageForm(instance=reward)
+	
+	image_forms = []
+	for image in images:
+		image_forms.append(ImageManageForm(instance=image))
+	
+	if riddle_form is None:
+		riddle_form = RiddleManageForm(instance=riddle)
+	
+	if condition_form is None:
+		condition_form = ConditionManageForm(instance=condition)
+
 	url = reverse('manage_reward', kwargs={'key': key})
-	#url = '/success/'
 	upload_url = blobstore.create_upload_url(url)
-	return render_to_response('reward/manage.html', {'upload_url': upload_url, 'form': form, 'reward': reward, 'image_forms':image_forms}, context_instance=RequestContext(request))
+
+	return render_to_response('reward/manage.html', {'upload_url': upload_url, 'form': form, 'reward': reward, 'image_forms':image_forms, 'riddle_form':riddle_form, 'condition_form':condition_form }, context_instance=RequestContext(request))

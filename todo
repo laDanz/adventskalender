@@ -2,6 +2,9 @@
 * Hinweise (kommen wenn man falsch geantwortet hat)
 * Benutzer kann geschaffte rätsel speichern
 * historie für alle möglichen ereignisse
-* manage nur für registrierte benutzer
 * benutzer können eigene kalender anlegen
 * kalender per mail verbreiten
+
+wichtig:
+* manage nur für registrierte benutzer
+* fix timezones

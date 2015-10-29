@@ -1,6 +1,9 @@
 from django.db import models
 
+from django.core.urlresolvers import reverse
+
 from google.appengine.api import images as gimages
+from google.appengine.ext import blobstore
 
 # Create your models here.
 
@@ -17,8 +20,25 @@ class Image(models.Model):
 	blob_key = models.CharField(max_length=300)
 	reward = models.ForeignKey(Reward)
 	def serving_url(self):
-		print "blobkey: " + self.blob_key
-		return gimages.get_serving_url(self.blob_key)
+		try:
+			return gimages.get_serving_url(self.blob_key)
+		except:
+			return ""
+	def content_type(self):
+		try:
+			return blobstore.BlobInfo.get(self.blob_key).content_type
+		except:
+			return ""
+	def filename(self):
+		try:
+			return blobstore.BlobInfo.get(self.blob_key).filename
+		except:
+			return ""
+	def download_url(self):
+		try:
+			return reverse('files', kwargs={'blob_key': self.blob_key})
+		except:
+			return ""
 
 class Condition(models.Model):
 	valid_from = models.DateTimeField(null=True, blank=True)

@@ -1,7 +1,21 @@
-{% if condition.valid_from and condition.valid_til %}
-	Leider ist diese Belohnung nur gültig vom {{ condition.valid_from }} bis zum {{ condition.valid_til }}!
-{% elif condition.valid_from %}
-	Leider ist diese Belohnung nur gültig ab dem {{ condition.valid_from }}!
-{% else %}
-	Leider war diese Belohnung nur gültig bis zum {{ condition.valid_til }}!
-{% endif %}
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block bootstrap3_content %}
+	<center>
+		<div class="jumbotron">
+			<h1>Alles zu seiner Zeit!</h1>
+			<p>
+				{% if condition.valid_from and condition.valid_til %}
+					Leider ist dieses Rätsel nur gültig vom {{ condition.valid_from }} bis zum {{ condition.valid_til }}!
+				{% elif condition.valid_from %}
+					Leider ist dieses Rätsel erst gültig ab dem {{ condition.valid_from }}!
+				{% else %}
+					Leider war dieses Rätsel nur gültig bis zum {{ condition.valid_til }}!
+				{% endif %}
+			</p>
+		</div>
+		<input placeholder="Code" id="code" onkeydown='if (event.keyCode == 13){document.getElementById("button").click()};' />
+		<input type="submit" class="btn btn-primary" value="Eingeben!" onclick='window.location.href = "/"+document.getElementById("code").value;' id="button" />
+	</center>  
+{% endblock %}

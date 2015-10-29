@@ -22,7 +22,7 @@ def reward(request, key):
 	try:
 		reward = Reward.objects.get(key=key)
 	except Reward.DoesNotExist:
-		return HttpResponse("Solch ein Rätsel gibt es nicht!")
+		return render_to_response('reward/not_found.html')
 	#are conditions met?
 	current_time=timezone.now()
 	#print current_time

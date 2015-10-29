@@ -4,11 +4,10 @@
 {% block bootstrap3_content %}
 	<center>
 		<div class="jumbotron">
-			<h1>Herzlich Willkommen auf deinem Adventskalender!</h1>
-			<p>Um weiterzumachen, musst du aber einen Code haben!</p>
+			<h1>Ups!</h1>
+			<p>Rätsel nicht vorhanden. Versuch doch ein anderes!</p>
 		</div>
-		
 		<input placeholder="Code" id="code" onkeydown='if (event.keyCode == 13){document.getElementById("button").click()};' />
 		<input type="submit" class="btn btn-primary" value="Eingeben!" onclick='window.location.href = "/"+document.getElementById("code").value;' id="button" />
-	</center>
+	</center>  
 {% endblock %}

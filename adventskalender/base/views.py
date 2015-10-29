@@ -11,6 +11,7 @@ from django.db.models.query import QuerySet
 
 
 from base.models import Reward, Condition, Riddle, Image
+from base.forms import *
 
 from google.appengine.ext import blobstore
 from google.appengine.api import images as gimages
@@ -53,23 +54,6 @@ def reward(request, key):
 		if not solved_all:
 			return render_to_response('reward/detail.html', {'reward': reward, 'riddles':riddles, 'error_message':error_message}, context_instance=RequestContext(request))
 	return render_to_response('reward/earned.html', {'reward': reward})
-
-class RewardManageForm(ModelForm):
-	class Meta:
-		model = Reward
-		fields = ('id', 'key', 'text')
-
-class ImageManageForm(ModelForm):
-	class Meta:
-		model = Image
-
-class ConditionManageForm(ModelForm):
-	class Meta:
-		model = Condition
-
-class RiddleManageForm(ModelForm):
-	class Meta:
-		model = Riddle
 
 def images(request, blob_key):
 	serving_url = gimages.get_serving_url(blob_key)

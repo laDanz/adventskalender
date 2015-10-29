@@ -73,7 +73,7 @@ def files(request, blob_key):
 	response['Content-Disposition'] = 'attachment; filename=' + binfo.filename
 	
 	breader = binfo.open()
-		for piece in read_in_chunks(breader):
+	for piece in read_in_chunks(breader):
 		response.write(piece)
 	breader.close()
 	

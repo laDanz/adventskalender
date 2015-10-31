@@ -18,6 +18,7 @@ urlpatterns += patterns('',
     url(r'^accounts/login/', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     
     url(r'^manage/$', 'base.views.list_rewards', name='list_rewards'),
+    url(r'^delete/(?P<key>.+)?', 'base.views.delete_reward', name='delete_reward'),
     url(r'^manage/(?P<key>.+)?', 'base.views.manage_reward', name='manage_reward'),
     url(r'^success/', 'base.views.upoadsuccess', name='upoadsuccess'),
     #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),

@@ -65,6 +65,7 @@
 				</div>
 				
 			<input type="submit" class="btn btn-primary" value="Speichern!" />
+			<a href="{% url "delete_reward" reward.key %}" class="btn btn-danger" onclick="return confirm('Wirklich löschen?')">Löschen!</a>
 			
 			</form>
 		</div>

@@ -4,7 +4,7 @@ import cgi
 from django.contrib.auth.decorators import permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.utils import timezone
 from google.appengine.api import images as gimages
@@ -177,6 +177,13 @@ def list_rewards(request):
 	rewards = Reward.objects.all().order_by("condition__valid_from")
 	context["rewards"] = rewards
 	return render_to_response('reward/list.html', context, context_instance=RequestContext(request))
+
+@permission_required('add_reward')
+def delete_reward(request, key):
+	reward = Reward.objects.get(key=key)
+	reward.delete()
+
+	return redirect("list_rewards")
 
 
 

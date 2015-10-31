@@ -16,6 +16,14 @@ class Image(models.Model):
 	image = models.ImageField(upload_to='uploads')
 	blob_key = models.CharField(max_length=300)
 	reward = models.ForeignKey(Reward)
+	def delete(self):
+		# not yet working
+		blobstore.BlobInfo.get(self.blob_key).delete()
+		try:
+			blobstore.BlobInfo.get(self.blob_key).delete()
+		except:
+			pass
+		super(Image, self).delete()
 	def serving_url(self):
 		try:
 			return gimages.get_serving_url(self.blob_key)

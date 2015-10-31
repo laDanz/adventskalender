@@ -10,8 +10,8 @@ from django.utils import timezone
 from google.appengine.api import images as gimages
 from google.appengine.ext import blobstore
 
-from adventskalender.base.models import Reward, Condition, Riddle, Image
 from forms import RewardManageForm, ImageManageForm, ConditionManageForm, RiddleManageForm
+from models import Reward, Condition, Riddle, Image
 
 
 def home(request):
@@ -170,3 +170,23 @@ def manage_reward(request, key):
 	upload_url = blobstore.create_upload_url(url)
 
 	return render_to_response('reward/manage.html', {'upload_url': upload_url, 'form': form, 'reward': reward, 'image_forms':image_forms, 'riddle_form':riddle_form, 'condition_form':condition_form }, context_instance=RequestContext(request))
+
+@permission_required('add_reward')
+def list_rewards(request):
+	context = {}
+	rewards = Reward.objects.all().order_by("condition__valid_from")
+	context["rewards"] = rewards
+	return render_to_response('reward/list.html', context, context_instance=RequestContext(request))
+
+
+
+
+
+
+
+
+
+
+
+
+

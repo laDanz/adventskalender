@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+
+{% block bootstrap3_content %}
+	<center>
+		<div class="jumbotron">
+			<h1>Verwaltung...</h1>
+			<p>
+				Objekte anzeigen
+			</p>
+		</div>
+		
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+		
+			<table class="table table-striped">
+				<tr><th>Reward</th><th>Condition</th><th>Riddle</th><th>Belohnung</th></tr>
+				{% for reward in rewards %}
+					<tr>
+						<td><a href="{% url "manage_reward" reward.key %}">{{ reward }}</a></td>
+						<td>
+							<ul>
+								{% for c in reward.condition_set.all %}
+								<li>{{ c }}</li>
+								{% endfor %}
+							</ul>
+						</td>
+						<td>
+							{% with r=reward.riddle_set.all.0 %}
+								<span title="{{ r.question }}">{{ r.question|truncatechars:30 }}</span><br/>
+								<span title="{{ r.answer }}">{{ r.answer|truncatechars:30 }}</span>
+							{% endwith %}
+						</td>
+						<td>
+							<ul>
+								{% for r in reward.image_set.all %}
+								<li><a href="{{ r.download_url }}">{{ r.filename }}</a></li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+				{% endfor %}
+				
+		
+		</div>
+	</center>
+
+{% endblock %}

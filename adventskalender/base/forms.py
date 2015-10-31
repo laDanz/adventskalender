@@ -1,5 +1,5 @@
 from django import forms
-from adventskalender.base.models import Reward, Image, Condition, Riddle
+from models import Reward, Image, Condition, Riddle
 
 class RewardManageForm(forms.ModelForm):
 	class Meta:

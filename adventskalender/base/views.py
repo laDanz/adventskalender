@@ -10,8 +10,8 @@ from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 
 
-from base.models import Reward, Condition, Riddle, Image
-from base.forms import *
+from models import Reward, Condition, Riddle, Image
+from forms import RewardManageForm, ImageManageForm, ConditionManageForm, RiddleManageForm
 
 from google.appengine.ext import blobstore
 from google.appengine.api import images as gimages
@@ -85,7 +85,10 @@ def get_blobinfo_from_post(request):
 	request.META['wsgi.input'].seek(0)
 	fields = cgi.FieldStorage(request.META['wsgi.input'], environ=request.META)
 	values = []
-	imagefields = fields["image"]
+	try:
+		imagefields = fields["image"]
+	except KeyError:
+		return result
 	if isinstance(imagefields, list):
 		for i in imagefields:
 			values.append( i )
@@ -119,31 +122,31 @@ def manage_reward(request, key):
 	riddle = reward.riddle_set.all()
 	if riddle.count() == 0:
 		riddle = Riddle()
-		riddle.reward = reward
 	else:
 		riddle = riddle[0]
 	
 	condition = reward.condition_set.all()
 	if condition.count() == 0:
 		condition = Condition()
-		condition.reward = reward
 	else:
 		condition = condition[0]
 
 	if request.method == 'POST':
 		form = RewardManageForm(instance=reward, data=request.POST)
 		if form.is_valid():
-			form.save()
+			reward = form.save()
 			blob_infos = get_blobinfo_from_post(request)
 			for blob_info in blob_infos:
 				#print "blobkey: " + str(blob_info.key())
 				image = Image()
 				image.blob_key = str(blob_info.key())
-				image.reward = Reward.objects.get(key=key)
+				image.reward = reward
 				image.save()
+		riddle.reward = reward
 		riddle_form = RiddleManageForm(instance=riddle, data=request.POST) 
 		if riddle_form.is_valid():
 			riddle_form.save()
+		condition.reward = reward
 		condition_form = ConditionManageForm(instance=condition, data=request.POST) 
 		if condition_form.is_valid():
 			condition_form.save()

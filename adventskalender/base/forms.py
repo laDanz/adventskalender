@@ -1,7 +1,5 @@
 from django import forms
-from django.forms.models import inlineformset_factory
-
-from base.models import *
+from adventskalender.base.models import Reward, Image, Condition, Riddle
 
 class RewardManageForm(forms.ModelForm):
 	class Meta:

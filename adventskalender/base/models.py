@@ -1,11 +1,8 @@
-from django.db import models
-
 from django.core.urlresolvers import reverse
-
+from django.db import models
 from google.appengine.api import images as gimages
 from google.appengine.ext import blobstore
 
-# Create your models here.
 
 class Reward(models.Model):
 	text = models.TextField(max_length=2000)

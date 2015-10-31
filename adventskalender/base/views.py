@@ -1,20 +1,18 @@
 # coding=utf8
 import cgi
-from django.forms import ModelForm
-from django.forms.formsets import formset_factory
+
+from django.contrib.auth.decorators import permission_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import timezone
-from django.core.urlresolvers import reverse
-from django.db.models.query import QuerySet
-from django.contrib.auth.decorators import permission_required
+from google.appengine.api import images as gimages
+from google.appengine.ext import blobstore
 
-from models import Reward, Condition, Riddle, Image
+from adventskalender.base.models import Reward, Condition, Riddle, Image
 from forms import RewardManageForm, ImageManageForm, ConditionManageForm, RiddleManageForm
 
-from google.appengine.ext import blobstore
-from google.appengine.api import images as gimages
 
 def home(request):
 	return render_to_response('home.html')

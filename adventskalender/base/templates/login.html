@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block bootstrap3_content %}
+	<center>
+		<div class="jumbotron">
+			<h1>Herzlich Willkommen auf deinem Adventskalender!</h1>
+			<p>Userlogin</p>
+		</div>
+		
+		
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			{% if form.errors %}
+				<p class="alert alert-danger">Your username and password didn't match. Please try again.</p>
+			{% endif %}
+		
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Login:</h3>
+				</div>
+				<div class="panel-body">
+					<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+						{% csrf_token %}
+						<table>
+							<tr>
+								<td>{{ form.username.label_tag }}</td>
+								<td>{{ form.username }}</td>
+							</tr>
+							<tr>
+								<td>{{ form.password.label_tag }}</td>
+								<td>{{ form.password }}</td>
+							</tr>
+						</table>
+
+						<input type="submit" class="btn btn-primary"  value="login" />
+						<input type="hidden" name="next" value="{{ next }}" />
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+    
+		
+
+	</center>
+{% endblock %}

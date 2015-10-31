@@ -14,6 +14,9 @@ urlpatterns += patterns('',
     # Examples:
     url(r'^$', 'base.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+    
+    
     url(r'^manage/(?P<key>.+)?', 'base.views.manage_reward', name='manage_reward'),
     url(r'^success/', 'base.views.upoadsuccess', name='upoadsuccess'),
     #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),

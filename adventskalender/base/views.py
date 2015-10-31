@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
-
+from django.contrib.auth.decorators import permission_required
 
 from models import Reward, Condition, Riddle, Image
 from forms import RewardManageForm, ImageManageForm, ConditionManageForm, RiddleManageForm
@@ -106,6 +106,7 @@ def upoadsuccess(request):
 	blob_info = get_blobinfo_from_post(request)
 	return render_to_response('debug/upoadsuccess.html', {'request': request, 'file':request.FILES['image'], 'binfo':blob_info, 'sbinfo':dir(blob_info) })
 
+@permission_required('add_reward')
 def manage_reward(request, key):
 	form = None
 	riddle_form = None

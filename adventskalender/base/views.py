@@ -48,7 +48,7 @@ def reward(request, key):
 				solved_all = False
 				break
 			user_answer = request.POST[answer_key]
-			if riddle.answer != user_answer:
+			if riddle.answer.lower() != user_answer.lower():
 				solved_all = False
 				error_message = "Versuch es nochmal!"
 				riddle.tries+=1

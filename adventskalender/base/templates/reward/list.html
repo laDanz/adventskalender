@@ -28,8 +28,10 @@
 						</td>
 						<td>
 							{% with r=reward.riddle_set.all.0 %}
+							<a href ="{% url "admin:base_riddle_change" r.id %}">
 								<span title="{{ r.question }}">{{ r.question|truncatechars:30 }}</span><br/>
 								<span title="{{ r.answer }}">{{ r.answer|truncatechars:30 }}</span>
+							</a>
 							{% endwith %}
 						</td>
 						<td>
